@@ -1,10 +1,10 @@
-// Generated folders
+# Generated folders
 /files/*
 /encrypted_files/*
 
-// venv
+# venv
 .venv/*
 
-// General
+# General
 .vscode/*
 .idea/*
