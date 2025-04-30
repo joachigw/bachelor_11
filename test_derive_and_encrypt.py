@@ -6,12 +6,14 @@ from string import ascii_uppercase, ascii_lowercase
 from time import time
 from pathlib import Path
 
+
 start = time()
+start_der = time()
 
 # Config
-n_companies = 5
-n_departments = 1
-n_units = 1
+n_companies = 10
+n_departments = 10
+n_units = 100
 files_dir = "files"
 encrypted_dir = "encrypted_files"
 Path(encrypted_dir).mkdir(exist_ok=True)
@@ -84,6 +86,8 @@ for i in range(n_companies): # companies
             derived_unit_keys.append(key)
             print(f"Key derived: {key.hex()}")
 
+end_der = time()
+print(f"Time to derive {len(derived_unit_keys):_} keys: {end_der-start_der}s ({(int) (len(derived_unit_keys)/(end_der-start_der))} keys per sec)")
 # Encrypt the 5 "software"-files with the corresponding derived key
 backend = default_backend()
 
@@ -95,10 +99,11 @@ for idx in range(len(derived_unit_keys)):
     if not os.path.exists(file_path):
         print(f"The file '{file_path}' was not found. Skipping...")
         continue
-    cipher = Cipher(algorithms.AES(derived_unit_keys[idx]), modes.ECB(), backend=backend)
+
+    cipher = Cipher(algorithms.AES(derived_unit_keys[idx]), modes.CTR(b'1234567890123456'), backend=backend)
     encryptor = cipher.encryptor()
 
-    print(f"Encrypting: {file_path} → {enc_file_path}")
+    # print(f"Encrypting: {file_path} → {enc_file_path}")
     with open(file_path, "rb") as fin, open(enc_file_path, "wb") as fout:
         while True:
             chunk = fin.read(16 * 1024)
