@@ -8,6 +8,7 @@ def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int)
     folder = "./config"
     pathlib.Path(folder).mkdir(exist_ok=True)
     file_path = f"{folder}/labels_contexts.csv"
+    conf_path = f"{folder}/conf.csv"
     
     print(f"""Creating labels and contexts for:\n
           {(n_companies):_} companies,
@@ -39,6 +40,9 @@ def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int)
         'unit_contexts': all_unit_contexts
     })
     data.to_csv(file_path, index=False)
+
+    conf = pd.DataFrame([n_companies, n_departments, n_units])
+    conf.to_csv(conf_path, index=False, header=False)
 
     end = time()
     print(f"""Done! Generating labels and contexts took {(end-start):.2f}s.
