@@ -44,7 +44,7 @@ def run_benchmarks(n_rounds: int) -> tuple:
         encryption_rates.append(f"{len(keys)/encryption_time:.0f}")
 
         print(f"Total time elapsed: {(time()-start_round):.2f}s\n")
-    return derivation_times, derivation_rates, encryption_time, encryption_rates
+    return derivation_times, derivation_rates, encryption_times, encryption_rates
 
 
 if __name__ == "__main__":
@@ -72,5 +72,5 @@ if __name__ == "__main__":
     # Right-align all columns
     colalign = ["left"] + ["right"] * 5
 
-    print(f"\n=== Results summary ({len(n_keys):_} keys) ===")
+    print(f"\n=== Results summary ({n_keys:_} keys) ===")
     print(tabulate(table, headers=headers, tablefmt="grid", colalign=colalign))
