@@ -56,6 +56,7 @@ if __name__ == "__main__":
     conf = pd.read_csv(CONFIG, header=None)[0].tolist()
     n_companies, n_departments, n_units = conf
     n_keys = n_companies*n_departments*n_units
+    print(f"=== Parameters ===\n  keys to derive/files to encrypt: {n_keys:_}")
 
     # Time 5 rounds
     derivation_times, derivation_rates, encryption_times, encryption_rates = run_benchmarks(5)
