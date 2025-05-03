@@ -1,15 +1,15 @@
-from time import time
 from pandas import read_csv
 from multiprocessing import Pool, cpu_count
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.kbkdf import (CounterLocation, KBKDFHMAC, Mode)
 
-"""
-Derive all unit keys within a department.
+def derive_keys_dep(args) -> list[bytes]:
+    """Derive all unit keys within a department.
 
-:param args: tuple of the department's label and context, the units' labels and contexts, and the department's company key
-"""
-def derive_keys_dep(args):
+    :param args: tuple of the department's label and context, the units' labels and contexts, and the department's company key
+    :return list of bytes representing derived keys for the department
+    """
+
     department_label, department_context, unit_labels, unit_contexts, company_key = args
     derived_unit_keys = []
 
@@ -44,18 +44,17 @@ def derive_keys_dep(args):
     return derived_unit_keys
 
 
-"""
-Derive all keys for all specified companies.
+def derive_keys(n_companies: int, n_departments: int, n_units: int, company_keys_path: str) -> list[bytes]:
+    """Derive all keys for all specified companies.
 
-:param n_companies: number of companies
-:param n_departments: numper of departments
-:param n_units: number of units
-"""
-def derive_keys(n_companies: int, n_departments: int, n_units: int, company_keys_path: str):
-    start_deriving = time()
+    :param n_companies: number of companies
+    :param n_departments: numper of departments
+    :param n_units: number of units
+    :return list of bytes representing derived keys
+    """
 
     derived_keys = []
-    
+
     # Configuration data for key derivation
     company_keys = [row.iloc[0] for (_, row) in read_csv(company_keys_path, delimiter=",").iterrows()]
     data = read_csv("./config/labels_contexts.csv", delimiter=",")
@@ -87,9 +86,5 @@ def derive_keys(n_companies: int, n_departments: int, n_units: int, company_keys
         if not isinstance(key, bytes) or len(key) != 32:
             raise ValueError(f"Invalid key at index {idx}: type={type(key)}, len={len(key)}")
 
-    time_derive = f"{(time() - start_deriving):.5f}"
-    keys_per_sec = f"{(int)(len(derived_keys)/(float(time_derive))):_}"
-
     print("done!")
-    print(f"    Time to derive {len(derived_keys):_} keys: {str(time_derive).replace('.', ',')}\n    ({keys_per_sec} keys/sec)")
     return derived_keys

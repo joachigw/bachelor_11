@@ -1,27 +1,31 @@
 import sys
 import pathlib
 import pandas as pd
-from time import time
 
 
-def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int):
+def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int) -> None:
+    """Generate placeholder labels and contexts.
+
+    :param n_companies: the number of companies
+    :param n_departments: the number of departments per company
+    :param n_units: the number of units per department
+    """
+
+    # Folder config
     folder = "./config"
-    pathlib.Path(folder).mkdir(exist_ok=True)
     file_path = f"{folder}/labels_contexts.csv"
     conf_path = f"{folder}/conf.csv"
+    pathlib.Path(folder).mkdir(exist_ok=True)
     
     print(f"""Creating labels and contexts for:\n
-          {(n_companies):_} companies,
-          {(n_departments):_} departments per company,
-          and {(n_units):_} units per department
-          in '{(file_path)}'...""")
+      {(n_companies):_} companies,
+      {(n_departments):_} departments per company,
+      and {(n_units):_} units per department
+      in '{(file_path)}'...""",
+      end='')
 
-    start = time()
-
-    all_department_labels = []
-    all_department_contexts = []
-    all_unit_labels = []
-    all_unit_contexts = []
+    all_department_labels, all_department_contexts = [], []
+    all_unit_labels, all_unit_contexts = [], []
 
     for _ in range(n_companies):
         for i_department in range(n_departments):
@@ -33,6 +37,7 @@ def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int)
                 all_unit_labels.append(f"Label unit {i_unit}")
                 all_unit_contexts.append(f"Context unit {i_unit}")
 
+    # Save labels and contexts to a .csv
     data = pd.DataFrame({
         'department_labels': all_department_labels,
         'department_contexts': all_department_contexts,
@@ -41,19 +46,20 @@ def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int)
     })
     data.to_csv(file_path, index=False)
 
+    # Save number of companies, departments and units
     conf = pd.DataFrame([n_companies, n_departments, n_units])
     conf.to_csv(conf_path, index=False, header=False)
 
-    end = time()
-    print(f"""Done! Generating labels and contexts took {(end-start):.2f}s.
-          Saved in {file_path}.
-          """)
+    print("done!")
 
 
 if __name__ == "__main__":
     match(len(sys.argv)):
         case 1:
-            print("Missing parameters 'n_companies', 'n_departments' and 'n_units'.")
+            print("Missing parameters 'n_companies', 'n_departments' and 'n_units'.\n")
+            default = input("Generate labels&contexts for 10 companies, 10 departments and 10 units? (Y/n):")
+            if default.upper() == "Y": generate_labels_contexts(10, 10, 10)
+            else: print("Aborting.")
         case 2:
             print("Missing parameters 'n_departments' and 'n_units'.")
         case 3:
