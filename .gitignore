@@ -3,8 +3,10 @@
 /files/*
 /encrypted_files/*
 
-# venv
+# Python-related
 .venv/*
+*.pyc
+__pycache__/
 
 # General
 .vscode/*
