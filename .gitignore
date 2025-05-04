@@ -1,5 +1,6 @@
 # Generated folders
 /config/*
+!/config/company_keys.csv
 /files/*
 /encrypted_files/*
 
