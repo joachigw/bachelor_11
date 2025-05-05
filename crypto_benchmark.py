@@ -80,5 +80,5 @@ if __name__ == "__main__":
     # Right-align all columns
     colalign = ["left"] + ["right"] * 5
 
-    print(f"\n=== Results summary ({n_keys:_} keys) ===")
+    print(f"\n=== Results summary ({n_keys:_} keys derived and files encrypted) ===")
     print(tabulate(table, headers=headers, tablefmt="grid", colalign=colalign))
