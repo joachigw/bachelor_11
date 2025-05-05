@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
@@ -34,6 +35,7 @@ def encrypt_files(keys: list, input_dir: str, output_dir: str) -> None:
     :param input_dir: path of files to encrypt
     :param output_dir: path to save encrypted files in
     """
+    Path(output_dir).mkdir(exist_ok=True)
 
     # One thread per file
     args = [((i, key), input_dir, output_dir) for i, key in enumerate(keys)]
