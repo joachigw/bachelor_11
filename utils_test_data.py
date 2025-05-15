@@ -132,13 +132,15 @@ if __name__ == "__main__":
         
             n_files = (int(sys.argv[4]))
             file_size_mb = (int(sys.argv[5]))
-            if (n_files*file_size_mb/1024) > 500:
-                print("Cannot create file directory with size greater than 500GB. Please try again.")
 
-            if n_files > 250_000:
-                print("Cannot create more than 500 000 files. Please try again.")
+            if n_files > 0 and file_size_mb > 0:
+                if (n_files*file_size_mb/1024) > 500:
+                    print("Cannot create file directory with size greater than 500GB. Please try again.")
 
-            if file_size_mb > 2_048:
-                print("Cannot create files larger than ~2GB. Please try again.")
-                
-            generate_files(n_files, file_size_mb)
+                if n_files > 250_000:
+                    print("Cannot create more than 500 000 files. Please try again.")
+
+                if file_size_mb > 2_048:
+                    print("Cannot create files larger than ~2GB. Please try again.")
+                    
+                generate_files(n_files, file_size_mb)
