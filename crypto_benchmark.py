@@ -48,12 +48,12 @@ def run_benchmarks(n_rounds: int) -> tuple:
         derivation_times.append(f"{time_derivation:.5f}".replace('.', ','))
         derivation_rates.append(f"{len(keys)//time_derivation}")
 
-        print(">Encrypting files...", end='')
-        _, time_encryption = time_function(encrypt_files, keys, envs["INPUT_DIR"], envs["OUTPUT_DIR"])
-        encryption_times.append(f"{time_encryption:.5f}".replace('.', ','))
-        encryption_rates.append(f"{len(keys)//time_encryption}")
+        # print(">Encrypting files...", end='')
+        # _, time_encryption = time_function(encrypt_files, keys, envs["INPUT_DIR"], envs["OUTPUT_DIR"])
+        # encryption_times.append(f"{time_encryption:.5f}".replace('.', ','))
+        # encryption_rates.append(f"{len(keys)//time_encryption}")
 
-        round_times.append(f"{(time()-start_round):.5f}")
+        # round_times.append(f"{(time()-start_round):.5f}")
 
     return round_times, derivation_times, derivation_rates, encryption_times, encryption_rates
 
@@ -65,11 +65,12 @@ if __name__ == "__main__":
     n_keys = n_companies*n_departments*n_units
     print(f"=== Parameters ===\n  keys to derive/files to encrypt: {n_keys:_}")
 
-    # Time 5 rounds
-    round_times, derivation_times, derivation_rates, encryption_times, encryption_rates = run_benchmarks(5)
+    # Time n_rounds
+    n_rounds = 5
+    round_times, derivation_times, derivation_rates, encryption_times, encryption_rates = run_benchmarks(n_rounds)
 
     # Print results in tabular format
-    headers = ["Round"] + [f"\033[1mRound {i+1}\033[0m" for i in range(5)]
+    headers = ["Round"] + [f"\033[1mRound {i+1}\033[0m" for i in range(n_rounds)]
     table = [
         ["Key Derivation (s)"] + derivation_times,
         ["Key Derivation rate (keys/s)"] + derivation_rates,
