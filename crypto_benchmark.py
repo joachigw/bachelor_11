@@ -3,8 +3,8 @@ import shutil
 import pandas as pd
 from time import time
 from tabulate import tabulate
-from kdf_hmac_sha256 import derive_keys
-from encrypt_aesgcm import encrypt_files
+from lib.kdf_hmac_sha256 import derive_keys
+from lib.encrypt_aesgcm import encrypt_files
 from utils_test_data import load_envs
 from typing import Callable, TypeVar, Any, Tuple
 
