@@ -128,26 +128,28 @@ if __name__ == "__main__":
         case 3:
             print("Missing parameters 'n_units', 'n_files' and 'file_size_mb'.")
         case 4:
-            print("Missing parameters 'n_files' and 'file_size_mb'.")
-        case 5:
             print("Missing parameter 'file_size_mb'.")
-        case 6:
+        case 5:
             n_companies = (int(sys.argv[1]))
             n_departments = (int(sys.argv[2]))
             n_units = (int(sys.argv[3]))
             generate_labels_contexts(n_companies, n_departments, n_units)
-        
-            n_files = (int(sys.argv[4]))
-            file_size_mb = (int(sys.argv[5]))
 
-            if n_files > 0 and file_size_mb > 0:
-                if (n_files*file_size_mb/1024) > 500:
-                    print("Cannot create file directory with size greater than 500GB. Please try again.")
+            n_files = n_companies*n_departments*n_units
+            file_size_mb = (int(sys.argv[4]))
 
-                if n_files > 250_000:
-                    print("Cannot create more than 500 000 files. Please try again.")
+            if n_files < 0:
+                print("The product of n_companies, n_departments and n_units cannot be 0.\nPlease try again.")
+            if file_size_mb < 0.1:
+                print("Cannot create files smaller than 0.1 MB.\nPlease try again.")
 
-                if file_size_mb > 2_048:
-                    print("Cannot create files larger than ~2GB. Please try again.")
-                    
-                generate_files(n_files, file_size_mb)
+            if (n_files*file_size_mb/1024) > 250:
+                print("Cannot create file directory with size greater than 250 GB.\nPlease try again.")
+
+            if n_files > 100_000:
+                print("Cannot create more than 100 000 files.\nPlease try again.")
+
+            if file_size_mb > 1_204:
+                print("Cannot create files larger than ~1 GB.\nPlease try again.")
+                
+            generate_files(n_files, file_size_mb)
