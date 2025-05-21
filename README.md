@@ -25,7 +25,6 @@ pip install -r requirements.txt
 
 This system derives AES-256 sub-keys from keys located in *config/company_keys.csv*.<br>Additional AES-256 keys can be added here.
 
-![]()
 <img src="/assets/key_hierarchy_readme.png" alt="Key hierarchy" width="800">
 
 The leaf-node derived keys are the keys used to encrypt the dummy files. A key is only used to encrypt one dummy file.
@@ -33,7 +32,7 @@ The leaf-node derived keys are the keys used to encrypt the dummy files. A key i
 Generate Labels, Contexts and dummy files:
 
 ```bash
-python3 utils_test_data.py <n_companies> <n_departments> <n_units> <file_size_mb>
+python3 scripts/utils_test_data.py <n_companies> <n_departments> <n_units> <file_size_mb>
 ```
 
 The number of keys to derive and files to encrypt is the product of ```<n_companies>, <n_departments> and <n_units>```.
