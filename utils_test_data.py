@@ -6,6 +6,33 @@ import pandas as pd
 from dotenv import load_dotenv
 
 
+def load_envs() -> dict:
+    """Load environment variables.
+    
+    :return dictionary of the env-variables
+    """
+    load_dotenv()
+    env_vars = {
+        "FILES_DIR": os.environ.get("FILES_DIR"),
+        "ENCRYPTED_DIR": os.environ.get("ENCRYPTED_DIR"),
+        "CONFIG": os.environ.get("CONFIG"),
+        "COMPANY_KEYS": os.environ.get("COMPANY_KEYS"),
+    }
+    not_found = []
+    for name, value in env_vars.items():
+        if value is None:
+            not_found.append(name)
+    if len(not_found) > 0:
+        print(f"Environment variables {not_found} could not be set!\nPlease verify 'os.environ.get()' and/or directory-paths in .env.")
+        exit()
+
+    # Optionally assign to variables
+    return {"INPUT_DIR": env_vars["FILES_DIR"],
+            "OUTPUT_DIR": env_vars["ENCRYPTED_DIR"],
+            "CONFIG": env_vars["CONFIG"],
+            "COMPANY_KEYS_PATH": env_vars["COMPANY_KEYS"]}
+
+
 def generate_labels_contexts(n_companies: int, n_departments: int, n_units: int) -> None:
     """Generate placeholder labels and contexts.
 
@@ -58,13 +85,18 @@ def generate_files(n_files: int, file_size_mb: int) -> None:
     :param file_size_mb: size of each file in MB
     """
 
+    # Remove directory containing encrypted files, if present
+    envs = load_envs()
+    if os.path.exists(envs["INPUT_DIR"]):
+        shutil.rmtree(envs["INPUT_DIR"])
+
     # Folder and file size config
     folder = "./config/files"
     pathlib.Path(folder).mkdir(exist_ok=True)
     chunk_size = 1024 * 1024 * file_size_mb
 
     # Create the base file to copy
-    print(f"Creating {(n_files):_} files of ~4 MB each in '{folder}/'...", end='')
+    print(f"Creating {(n_files):_} file(s) of ~4 MB each in '{folder}/'...", end='')
     file_path = os.path.join(folder, "file_0.bin")
     with open(file_path, "wb") as f:
         bytes_written = 0
@@ -74,7 +106,7 @@ def generate_files(n_files: int, file_size_mb: int) -> None:
             bytes_written += len(chunk)
 
     # Create copies, continue if a copy already exists
-    for i in range(n_files):
+    for i in range(n_files-1):
         file_name = f"{folder}/file_{i+1}.bin"
         if os.path.exists(file_name):
             continue
@@ -82,31 +114,6 @@ def generate_files(n_files: int, file_size_mb: int) -> None:
 
     print("done!")
 
-def load_envs() -> dict:
-    """Load environment variables.
-    
-    :return dictionary of the env-variables
-    """
-    load_dotenv()
-    env_vars = {
-        "FILES_DIR": os.environ.get("FILES_DIR"),
-        "ENCRYPTED_DIR": os.environ.get("ENCRYPTED_DIR"),
-        "CONFIG": os.environ.get("CONFIG"),
-        "COMPANY_KEYS": os.environ.get("COMPANY_KEYS"),
-    }
-    not_found = []
-    for name, value in env_vars.items():
-        if value is None:
-            not_found.append(name)
-    if len(not_found) > 0:
-        print(f"Environment variables {not_found} could not be set!\nPlease verify 'os.environ.get()' and/or directory-paths in .env.")
-        exit()
-
-    # Optionally assign to variables
-    return {"INPUT_DIR": env_vars["FILES_DIR"],
-            "OUTPUT_DIR": env_vars["ENCRYPTED_DIR"],
-            "CONFIG": env_vars["CONFIG"],
-            "COMPANY_KEYS_PATH": env_vars["COMPANY_KEYS"]}
 
 if __name__ == "__main__":
     match(len(sys.argv)):
