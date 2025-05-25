@@ -1,6 +1,6 @@
-Copyright (c) 2025
-Heine Mærde Brakstad
-Mikkel Bentzrud Rasch
+Copyright (c) 2025<br>
+Heine Mærde Brakstad<br>
+Mikkel Bentzrud Rasch<br>
 Joachim Grimen Westgaard
 
 All rights reserved.
